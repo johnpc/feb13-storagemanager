@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# StorageManager Bug Demo
 
-## Getting Started
+## Bug description
 
-First, run the development server:
+I am using the `StorageManager` to upload files to S3. Specifically I am using the `path` prop, which according to [the docs](https://ui.docs.amplify.aws/react/connected-components/storage/storagemanager) is
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+A path to put files in the s3 bucket. This will be prepended to the key sent to s3 for each file.
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+However, when I upload files, I am not observing the file uploaded under the specified `path`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Reproduction steps
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Run the following bash commands to set up the environment
 
-## Learn More
+```bash
+git clone https://github.com/johnpc/feb13-storagemanager
+cd feb13-storagemanager
+npm install
+npx amplify sandbox
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Then navigate to http://localhost:3000 and upload a file via the file manager.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**EXPECTED:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Because `src/app/page.tsx` specifies `path={"folder"}`
 
-## Deploy on Vercel
+```typescript
+<StorageManager
+  acceptedFileTypes={["image/*"]}
+  path={"folder"}
+  ...
+/>
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+I expect the file uploaded to be uploaded to the S3 bucket nested under a folder named `folder`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+**ACTUAL:**
+
+The file is uploaded to S3, but not nested under any path. The file is uploaded to the root of the s3 bucket.
