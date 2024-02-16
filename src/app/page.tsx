@@ -10,8 +10,7 @@ function Home() {
   const [key, setKey] = useState<string>();
 
   const onUploadSuccess = (event: {key?: string}) => {
-    console.log(event.key);
-    setKey(key);
+    setKey(event.key);
   };
 
   return (
@@ -20,7 +19,7 @@ function Home() {
         acceptedFileTypes={["image/*"]}
         path={"folder/"}
         accessLevel="guest"
-        maxFileCount={1}
+        maxFileCount={5}
         onUploadSuccess={onUploadSuccess}
         isResumable
       />

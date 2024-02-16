@@ -1,5 +1,7 @@
 # StorageManager Bug Demo
 
+**UPDATE:** Confirmed fixed in `@aws-amplify/ui-react-storage@3.0.14`
+
 ## Bug description
 
 I am using the `StorageManager` to upload files to S3. Specifically I am using the `path` prop, which according to [the docs](https://ui.docs.amplify.aws/react/connected-components/storage/storagemanager) is
